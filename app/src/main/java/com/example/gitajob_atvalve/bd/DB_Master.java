@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -88,8 +89,10 @@ public class DB_Master extends SQLiteOpenHelper {
     }
 
 
-    public void getVersionDB() {
-        Log(Integer.toString(this.getReadableDatabase().getVersion()));
+    public int getVersionDB() {
+        int version = this.getReadableDatabase().getVersion();
+        return version;
+
     }
 
     //Todo 4. Creamos un método para insertar un dato en la BD.
@@ -104,6 +107,8 @@ public class DB_Master extends SQLiteOpenHelper {
 
         values.put(USER_NAME_COLUMN, name);
         values.put(USER_PASSWORD_COLUMN, pass);
+        Log("USUARIO CREADO");
+        Toast.makeText(mContext, "Has de rellenar todos los campos", Toast.LENGTH_LONG + 2).show();
 
         //Todo 4.2. Insertamos a través del método insert, cuyos parametro son:
         //todo -> nombre de la tabla
