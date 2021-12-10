@@ -1,7 +1,12 @@
 package com.example.gitajob_atvalve;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,38 +23,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     DB_Master bd;
     Button bLogin;
     Button bSignUp;
+
     int bdV;
 
 
     @Override
-    public void onClick(View v) {
+    protected void onCreate(Bundle saved) {
+        super.onCreate(null); // <-- por ahora esta en null porque quiero que se reisntale todo el rato
+        setContentView(R.layout.activity_login);
+        initComponents(user, password, bd, bLogin, bSignUp);
+        cargarImagenes();
+        bd = new DB_Master(this);
+
+        //creo mi base de datos
+        bdV = bd.getVersionDB(); //paso mi numero de version;
+
+        //le doy funcionalidad a los botones
+        bSignUp.setOnClickListener(this::onClick);
+        //un array inicializador de botones, que guay
+        // for (Button button : Arrays.asList(bLogin, bSignUp)) {
+        //            button.setOnClickListener(this);
+        //        }
+
+
+    }
+
+
+    @Override
+    public void onClick(View v) {    //metodo para poner todos los lisenter de la de golpe
         // do something when the button is clicked
         // Yes we will handle click here but which button clicked??? We don't know
         // So we will make
         switch (v.getId()/*to get clicked view id**/) {
             case R.id.bLogin:
 
+                // esto seria algo tal db.selectfromUserWhere(Password)
 
                 break;
             case R.id.bRegistrar:
-                    String texto1 = user.getText().toString(); String texto2 = user.getText().toString();
-                if ((texto1 == "") || (texto2 =="")) {
+                String texto1 = user.getText().toString();
+                String texto2 = user.getText().toString();
+                if ((texto1 == "") || (texto2 == "")) {
                     Toast.makeText(this, "Has de rellenar todos los campos1", Toast.LENGTH_LONG + 2).show();
-                    Toast.makeText(this, "Has de rellenar todos los campos2", Toast.LENGTH_LONG + 2).show();
-                    Toast.makeText(this, "Has de rellenar todos los campos3", Toast.LENGTH_LONG + 2).show();
-                    Toast.makeText(this, "Has de rellenar todos los campos4", Toast.LENGTH_LONG + 2).show();
 
-                    Toast.makeText(this, "Has de rellenar todos los campos5", Toast.LENGTH_LONG + 2).show();
+
                     user.setText("");
                     password.setText("");
+                    break;
                 } else {
                     bd.insertUsuarios(user.getText().toString(), password.getText().toString());
                     Toast.makeText(this, "bd", Toast.LENGTH_LONG + 2).show();
 
+
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+
+
+                    break;
                 }
 
-
-                break;
 
             default:
                 break;
@@ -78,38 +109,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void initComponents(EditText user, EditText password, DB_Master bd, Button bLogin, Button bSignUp) {
         this.user = (EditText) findViewById(R.id.txtUsuario);
         this.password = (EditText) findViewById(R.id.txtContrasenia);
-        this.bLogin = (Button)findViewById(R.id.bLogin);
+        this.bLogin = (Button) findViewById(R.id.bLogin);
         this.bSignUp = (Button) findViewById(R.id.bRegistrar);
 
 
     }
 
 
-    @Override
-    protected void onCreate(Bundle saved) {
-        super.onCreate(null);
-        setContentView(R.layout.activity_login);
-        initComponents(user, password, bd, bLogin, bSignUp);
-        cargarImagenes();
-        bd = new DB_Master(this);
+    //deprecated
 
-
-
-        //creo mi base de datos
-
-
-        bdV = bd.getVersionDB(); //paso mi numero de version;
-
-
-        //le doy funcionalidad a los botones
-
-
-        bSignUp.setOnClickListener(this::onClick);
-        //un array inicializador de botones, que guay
-        // for (Button button : Arrays.asList(bLogin, bSignUp)) {
-        //            button.setOnClickListener(this);
-        //        }
-    }
 }
 
 
