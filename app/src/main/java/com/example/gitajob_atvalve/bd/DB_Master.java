@@ -209,13 +209,15 @@ public class DB_Master extends SQLiteOpenHelper {
                 Log.d("base", "en mi cabeza esto tiene sentido");
                 estado = false;
                 System.out.println("LA CONTRASEÑA ES INCORRECTA");
+                return estado;
             }
         } else {
             System.out.println("no existe el usuario ");
-
-            estado = false;
+            estado = true;
             return estado;
         }
-        return null;
     }
+
+
+    //comprobar que no se registrar el nombre de un usuario ya existente en la base de datos
 }
