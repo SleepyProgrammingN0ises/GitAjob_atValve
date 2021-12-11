@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //le doy funcionalidad a los botones
         bSignUp.setOnClickListener(this::onClick);
+        bLogin.setOnClickListener(this::onClick);
         //un array inicializador de botones, que guay
         // for (Button button : Arrays.asList(bLogin, bSignUp)) {
         //            button.setOnClickListener(this);
@@ -51,13 +52,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {    //metodo para poner todos los lisenter de la de golpe
-        // do something when the button is clicked
-        // Yes we will handle click here but which button clicked??? We don't know
-        // So we will make
+       
         switch (v.getId()/*to get clicked view id**/) {
             case R.id.bLogin:
 
-                // esto seria algo tal db.selectfromUserWhere(Password)
+            boolean kapasao=    bd.verifyUserData(user.getText().toString(),password.getText().toString());
+                    if(kapasao == true){
+                        Toast.makeText(this, "Pa dentro", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }else{
+                        Toast.makeText(this, "el usuario o la contraseña es incorrecto", Toast.LENGTH_SHORT).show();
+                    }
+
 
                 break;
             case R.id.bRegistrar:
@@ -65,23 +74,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String texto2 = user.getText().toString();
                 if ((texto1 == "") || (texto2 == "")) {
                     Toast.makeText(this, "Has de rellenar todos los campos1", Toast.LENGTH_LONG + 2).show();
-
-
                     user.setText("");
                     password.setText("");
                     break;
                 } else {
-                    bd.insertUsuarios(user.getText().toString(), password.getText().toString());
-                    Toast.makeText(this, "bd", Toast.LENGTH_LONG + 2).show();
+                    kapasao = bd.verifyUserData(texto1, texto2);
+
+                    if (kapasao) {
+
+                        bd.insertUsuarios(user.getText().toString(), password.getText().toString());
+                        Toast.makeText(this, "bd", Toast.LENGTH_LONG + 2).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
 
 
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        break;
 
 
-                    break;
+                    }
                 }
-
-
             default:
                 break;
         }

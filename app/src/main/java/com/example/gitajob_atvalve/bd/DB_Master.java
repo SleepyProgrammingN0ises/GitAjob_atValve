@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class DB_Master extends SQLiteOpenHelper {
     private static final String DB_TABLE_NAME = "USERS";
 
     //Database version must be >= 1
-    private static final int DB_VERSION =1;
+    private static final int DB_VERSION = 1;
 
     //Columns
     private static final String USER_NAME_COLUMN = "CUSER";
@@ -52,7 +53,7 @@ public class DB_Master extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         String CREATE_USER_TABLE = "CREATE TABLE " + DB_TABLE_NAME + "("
-                + USER_NAME_COLUMN + " TEXT ,"+USER_PASSWORD_COLUMN+ " TEXT "+")";
+                + USER_NAME_COLUMN + " TEXT ," + USER_PASSWORD_COLUMN + " TEXT " + ")";
 
         //Todo 2.1. Lanzamos la consulta con execSQL
         sqLiteDatabase.execSQL(CREATE_USER_TABLE);
@@ -108,7 +109,7 @@ public class DB_Master extends SQLiteOpenHelper {
         values.put(USER_NAME_COLUMN, name);
         values.put(USER_PASSWORD_COLUMN, pass);
         Log("USUARIO CREADO");
-        Toast.makeText(mContext, "Has de rellenar todos los campos", Toast.LENGTH_LONG + 2).show();
+        Toast.makeText(mContext, "USUARIO CREADO", Toast.LENGTH_LONG + 2).show();
 
         //Todo 4.2. Insertamos a través del método insert, cuyos parametro son:
         //todo -> nombre de la tabla
@@ -191,4 +192,30 @@ public class DB_Master extends SQLiteOpenHelper {
         Log.d("DB", msg);
     }
 
+
+    public Boolean verifyUserData(String user, String password) {
+        boolean estado;
+        //comprueba primero si existe un registro con usuario.
+        SQLiteDatabase db = this.getWritableDatabase();            //importante dejar espacio entre las comillas que si no da error
+        Cursor cursorpass;
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + USER_NAME_COLUMN + "= ?", new String[]{user});
+        if (cursor.getCount() > 0) {
+            cursorpass = db.rawQuery("SELECT '" + user + "' FROM " + DB_TABLE_NAME + " WHERE " + USER_PASSWORD_COLUMN + " = ? ", new String[]{password});
+            if (cursorpass.getCount() > 0) {
+                System.out.println("el usuario  existe entra");
+                estado = true;
+                return estado;
+            } else {
+                Log.d("base", "en mi cabeza esto tiene sentido");
+                estado = false;
+                System.out.println("LA CONTRASEÑA ES INCORRECTA");
+            }
+        } else {
+            System.out.println("no existe el usuario ");
+
+            estado = false;
+            return estado;
+        }
+        return null;
+    }
 }
